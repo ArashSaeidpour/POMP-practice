@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1530637626149.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1173179525",
+    "id" : "BA5F79DC",
+    "lastKnownWriteTime" : 1530639278,
+    "last_content_update" : 1530639278578,
+    "path" : "~/Dropbox/POMP/Boarding School/BoardingParticleFilter.R",
+    "project_path" : "BoardingParticleFilter.R",
+    "properties" : {
+        "cursorPosition" : "69,0",
+        "scrollLine" : "60"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

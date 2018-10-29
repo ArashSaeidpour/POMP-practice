@@ -1,0 +1,9 @@
+{
+    "path" : "~/Dropbox/POMP/SEIR",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

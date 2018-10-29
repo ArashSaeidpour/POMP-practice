@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1533047201533.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1812233703",
+    "id" : "FE7ECA01",
+    "lastKnownWriteTime" : 1529428027,
+    "last_content_update" : 1533057230554,
+    "path" : "C:/Users/arashs/Dropbox/POMP/SEIR/SEIR-TauLeap.R",
+    "project_path" : "SEIR-TauLeap.R",
+    "properties" : {
+        "cursorPosition" : "7,13",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

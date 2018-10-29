@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1533047783235.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "891816723",
+    "id" : "2B43C25",
+    "lastKnownWriteTime" : 1533060068,
+    "last_content_update" : 1533060068143,
+    "path" : "C:/Users/arashs/Dropbox/POMP/SEIR/SEIR_PF_Simulation.R",
+    "project_path" : "SEIR_PF_Simulation.R",
+    "properties" : {
+        "cursorPosition" : "163,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled4"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,97 @@
+#######################################################################################################
+# Plot demographic in the different regions of England and Wales
+#######################################################################################################
+
+rm(list = ls())
+library(ggplot2)
+library(plyr)
+library(reshape2)
+library(RColorBrewer)
+library(grid)
+library(cowplot)
+library(magrittr)
+library(XLConnect)
+library(stringr)
+save_plot <- T
+script_name <- "plot_demog_data"
+mytheme_bw <- theme_bw() %+replace% theme(strip.background = element_blank(),
+                                          panel.grid.minor = element_blank(),
+                                          legend.position = "right", legend.key = element_blank())
+mytheme_minimal <- theme_minimal() %+replace% theme(panel.grid.minor = element_blank(),
+                                                    panel.grid.major = element_blank())
+mytheme_classic <- theme_classic() %+replace% theme(axis.line.x = element_line(), axis.line.y = element_line())
+
+# Load total population sizes by region 1971--2010 ---------------------------------------------------------------
+pop_dat <- read.csv("../data/demographic/population_sizes_by_region_1971_2010.csv")
+
+# Census data are in thousands
+pop_dat[, -1] <- 1e3 * pop_dat[, -1]
+colnames(pop_dat) <- str_replace_all(colnames(pop_dat), "\\.", " ")
+pop_dat_melt <- melt(pop_dat, id.vars = "Year")
+
+if(save_plot) pdf(file = paste0("figures/", script_name, ".pdf"), width = 12, height = 8)
+pl <- ggplot(data = pop_dat_melt, mapping = aes(x = Year, y = value / 1e6)) + 
+  geom_line() + facet_wrap(~ variable, scales = "free_y") + 
+  scale_x_continuous(breaks = c(1971, 1980, 1990, 2000, 2010)) + 
+  mytheme_bw + labs(x = "Time (years)", y = "Population size (millions)")
+print(pl)
+
+# Load age-stratified population sizes during 1951--1973 ------------------------------------
+wb <- loadWorkbook(filename = "../data/demographic/Population size_draft2.xlsx")
+sh <- getSheets(wb)
+sh_sub <- sh[grep("Est. home", sh)] # Subset to take mid-year pop estimates from 1950
+
+# Iterates through the sheets
+# Age stratification changes in 1963, so consider two data sets during 1950--1962 and 1963--1973
+popdat_age <- vector(mode = "list", length = 2)
+for(i in 1:length(sh_sub)) {
+  dat_cur <- readWorksheet(object = wb, sheet = sh_sub[i])
+  dat_cur %<>% mutate(year = 1949 + i)
+  
+  if(i == 1) {
+    popdat_age[[1]] <- dat_cur
+  } else if(i >= 2 & i <= 13) {
+    popdat_age[[1]] <- rbind(popdat_age[[1]], dat_cur)
+  } else if(i == 14) {
+    popdat_age[[2]] <- dat_cur
+  } else if(i > 14) {
+    popdat_age[[2]] <- rbind(popdat_age[[2]], dat_cur)
+  }
+}
+
+# Change column names
+colnames(popdat_age[[1]]) <- c("region", "sex", "all", "[0,5)", "[5,15)", 
+                               "[15,25)", "[25,35)", "[35,45)", "[45,55)", "[55,65)", 
+                               "[65,75)", "75+", "year")
+colnames(popdat_age[[2]]) <- c("region", "sex", "all", "[0,1)", "[1,5)", 
+                               "[5,10)", "[10,15)", "[15,20)", "[20,25)", "[25,30)", 
+                               "[30,35)", "[35,40)", "[40,45)", "[45,50)", "[50,55)",
+                               "[55,60)", "[60,65)", "[65,70)", "[70,75)", "75+", 
+                               "year")
+
+# Aggregate data over sex 
+for(i in seq_along(popdat_age)) {
+  popdat_age[[i]] <- popdat_age[[i]][grep("[Ss]ummary", popdat_age[[i]]$region), ] %>% 
+    mutate(region = str_replace(region, ": [Ss]ummary", "")) %>% 
+    melt(id.vars = c("year", "region", "sex"), value.name = "pop", variable.name = "agecat") %>% 
+    subset(agecat != "all") %>% mutate(agecat = droplevels(agecat)) %>% 
+    ddply(~ year + region + agecat, summarise, pop = sum(pop))
+}
+
+# Plot data 1950--1962
+pl <- ggplot(data = popdat_age[[1]], mapping = aes(x = year, y = pop / 1e3, fill = agecat)) + 
+  geom_bar(stat = "identity", position = "stack") + facet_wrap(~ region, scales = "free_y") + 
+  mytheme_bw + scale_x_continuous(breaks = c(1950, 1955, 1962)) + 
+  labs(x = "Time (years)", y = "Population size (millions)", 
+       fill = "Age\ngroup", title = "Age-specific population sizes, 1950-1962")
+print(pl)
+
+# Plot data 1963--1973
+pl <- ggplot(data = popdat_age[[2]], mapping = aes(x = year, y = pop / 1e3, fill = agecat)) + 
+  geom_bar(stat = "identity", position = "stack") + facet_wrap(~ region, scales = "free_y") + 
+  mytheme_bw + scale_x_continuous(breaks = c(1963, 1968, 1973)) + 
+  labs(x = "Time (years)", y = "Population size (millions)", 
+       fill = "Age\ngroup", title = "Age-specific population sizes, 1963-1973")
+print(pl)
+
+if(save_plot) dev.off()

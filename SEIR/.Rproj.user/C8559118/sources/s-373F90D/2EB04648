@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1533047918304.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "243992373",
+    "id" : "2EB04648",
+    "lastKnownWriteTime" : 1528743038,
+    "last_content_update" : 1528743038,
+    "path" : "C:/Users/arashs/Dropbox/POMP/SEIR/He2010.R",
+    "project_path" : "He2010.R",
+    "properties" : {
+        "cursorPosition" : "247,38",
+        "scrollLine" : "238"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
